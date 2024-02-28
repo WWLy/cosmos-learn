@@ -59,6 +59,7 @@ async function start(chain, mnemonicOrKey, proposalId, option) {
         if (balances.amount > 0) {
             let voted = await hasVoted(queryClient, proposalId, account.address);
             if (!voted) {
+                console.log("start vote...");
                 let result = await vote(client, account.address, proposalId, option);
                 let code = result.code;
                 if (code == 0) {
@@ -69,6 +70,8 @@ async function start(chain, mnemonicOrKey, proposalId, option) {
             } else {
                 console.log(`${account.address} has already voted`)
             }
+        } else {
+            console.log('No balances!')
         }
     } catch (err) {
         console.log(err)
@@ -76,9 +79,19 @@ async function start(chain, mnemonicOrKey, proposalId, option) {
     }
 }
 
-const chainName = 'dymension';
-const mnemonicOrKey = 'Put mnemonic or private key here';
-const proposalId = 1; //Proposal ID
-const option = 1; //Option: 0-No, 1-Yes
+async function startAll() {
+    const chainName = 'dymension';
+    const mnemonics = [
+        
+    ];
+    const proposalId = 3; //Proposal ID
+    const option = 1; //Option: 0-No, 1-Yes
+    for (const index in mnemonics) {
+        console.log('Start ' + (index));
+        const mnemonic = mnemonics[index];
+        await start(chainsMap[chainName], mnemonic, proposalId, option);
+        console.log('\n-----------------------------------------\n');
+    }
+}
 
-start(chainsMap[chainName], mnemonicOrKey, proposalId, option);
+startAll();

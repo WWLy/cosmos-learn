@@ -70,6 +70,7 @@ function EthermintSigningClient (network, signer) {
         const processedGasPrice = typeof gasPrice === "string" ? GasPrice.fromString(gasPrice) : gasPrice;
         const { denom, amount: gasPriceAmount } = processedGasPrice;
         const amount = ceil(bignumber(multiply(bignumber(gasPriceAmount.toString()), bignumber(gasLimit.toString()))));
+        console.log('calculateFee: ' + gasLimit + ", " + amount + ", " + gasPrice)
         return {
             amount: [coin(amount, denom)],
             gas: gasLimit.toString()
@@ -88,6 +89,8 @@ function EthermintSigningClient (network, signer) {
         if (!gas)
             gas = await simulate(address, messages, memo);
         const fee = getFee(gas, defaultGasPrice);
+        console.log(messages)
+        console.log(fee)
         const txBody = await sign(address, messages, memo, fee)
         return broadcast(txBody)
     }
